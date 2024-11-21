@@ -23,6 +23,7 @@ spec:
       source:
         path: charts/guestbook
         repoURL: https://github.com/blakepettersson/kargo-helm.git
+        targetRevision: stage/{{path.basename}}
         helm:
           valueFiles:
           - "/env/{{path.basename}}/values.yaml"

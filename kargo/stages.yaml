@@ -29,22 +29,34 @@ spec:
           - branch: stage/dev
             create: true
             path: ./out
+
       - uses: git-clear
         config:
           path: ./out
-      - uses: helm-update-image
-        as: update-image
-        config:
-          path: ./out/env/dev/values.yaml
-          images:
-          - image: ghcr.io/blakepettersson/guestbook
-            key: image.tag
-            value: Tag
 
       - uses: copy
         config:
           inPath: ./src/base/feature-flags.yaml
           outPath: ./out/env/dev/feature-flags.yaml
+
+      - uses: copy
+        config:
+          inPath: ./src/env/dev/values.yaml
+          outPath: ./out/env/dev/values.yaml
+
+      - uses: copy
+        config:
+          inPath: ./src/charts
+          outPath: ./out/charts
+
+      - uses: helm-update-image
+        as: update-image
+        config:
+          path: ./out/env/dev/values.yaml
+          images:
+            - image: ghcr.io/blakepettersson/guestbook
+              key: image.tag
+              value: Tag
 
       # Commit the changes to the Git repository.
       - uses: git-commit
@@ -98,8 +110,29 @@ spec:
             checkout:
               - fromFreight: true
                 path: ./src
-              - branch: main
+              - branch: stage/staging
+                create: true
                 path: ./out
+
+        - uses: git-clear
+          config:
+            path: ./out
+
+        - uses: copy
+          config:
+            inPath: ./src/base/feature-flags.yaml
+            outPath: ./out/env/staging/feature-flags.yaml
+
+        - uses: copy
+          config:
+            inPath: ./src/env/staging/values.yaml
+            outPath: ./out/env/staging/values.yaml
+
+        - uses: copy
+          config:
+            inPath: ./src/charts
+            outPath: ./out/charts
+
         - uses: helm-update-image
           as: update-image
           config:
@@ -108,11 +141,6 @@ spec:
               - image: ghcr.io/blakepettersson/guestbook
                 key: image.tag
                 value: Tag
-
-        - uses: copy
-          config:
-            inPath: ./src/base/feature-flags.yaml
-            outPath: ./out/env/staging/feature-flags.yaml
 
         # Commit the changes to the Git repository.
         - uses: git-commit
@@ -169,9 +197,26 @@ spec:
               - branch: stage/prod
                 create: true
                 path: ./out
+
         - uses: git-clear
           config:
             path: ./out
+
+        - uses: copy
+          config:
+            inPath: ./src/base/feature-flags.yaml
+            outPath: ./out/env/prod/feature-flags.yaml
+
+        - uses: copy
+          config:
+            inPath: ./src/env/prod/values.yaml
+            outPath: ./out/env/prod/values.yaml
+
+        - uses: copy
+          config:
+            inPath: ./src/charts
+            outPath: ./out/charts
+
         - uses: helm-update-image
           as: update-image
           config:
@@ -180,11 +225,6 @@ spec:
               - image: ghcr.io/blakepettersson/guestbook
                 key: image.tag
                 value: Tag
-
-        - uses: copy
-          config:
-            inPath: ./src/base/feature-flags.yaml
-            outPath: ./out/env/prod/feature-flags.yaml
 
         # Commit the changes to the Git repository.
         - uses: git-commit
