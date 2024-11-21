@@ -26,9 +26,12 @@ spec:
           checkout:
           - fromFreight: true
             path: ./src
-          - branch: main
+          - branch: stage/dev
+            create: true
             path: ./out
-
+      - uses: git-clear
+        config:
+          path: ./out
       - uses: helm-update-image
         as: update-image
         config:
@@ -55,6 +58,7 @@ spec:
       - uses: git-push
         config:
           path: ./out
+          targetBranch: stage/dev
 
       - uses: argocd-update
         config:
@@ -96,7 +100,6 @@ spec:
                 path: ./src
               - branch: main
                 path: ./out
-
         - uses: helm-update-image
           as: update-image
           config:
@@ -123,6 +126,7 @@ spec:
         - uses: git-push
           config:
             path: ./out
+            targetBranch: stage/staging
 
         - uses: argocd-update
           config:
@@ -162,9 +166,12 @@ spec:
             checkout:
               - fromFreight: true
                 path: ./src
-              - branch: main
+              - branch: stage/prod
+                create: true
                 path: ./out
-
+        - uses: git-clear
+          config:
+            path: ./out
         - uses: helm-update-image
           as: update-image
           config:
@@ -191,6 +198,7 @@ spec:
         - uses: git-push
           config:
             path: ./out
+            targetBranch: stage/prod
 
         - uses: argocd-update
           config:
