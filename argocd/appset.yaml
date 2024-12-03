@@ -4,27 +4,28 @@ metadata:
   name: kargo-helm
   namespace: argocd
 spec:
+  goTemplate: true
   generators:
-  - git:
-      repoURL: https://github.com/blakepettersson/kargo-helm.git
-      revision: HEAD
-      directories:
-      - path: env/*
+  - list:
+      elements:
+        - stage: dev
+        - stage: staging
+        - stage: prod
   template:
     metadata:
-      name: kargo-helm-{{path.basename}}
+      name: kargo-helm-{{.stage}}
       annotations:
-        kargo.akuity.io/authorized-stage: kargo-helm:{{path.basename}}
+        kargo.akuity.io/authorized-stage: kargo-helm:{{.stage}}
     spec:
       destination:
-        namespace: kargo-helm-{{path.basename}}
+        namespace: kargo-helm-{{.stage}}
         name: demo
       project: kargo-helm
       source:
         path: charts/guestbook
         repoURL: https://github.com/blakepettersson/kargo-helm.git
-        targetRevision: stage/{{path.basename}}
+        targetRevision: stage/{{.stage}}
         helm:
           valueFiles:
-          - "/env/{{path.basename}}/values.yaml"
-          - "/env/{{path.basename}}/feature-flags.yaml"
+          - "/env/{{.stage}}/values.yaml"
+          - "/env/{{.stage}}/feature-flags.yaml"
