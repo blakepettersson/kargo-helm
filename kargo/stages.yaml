@@ -24,7 +24,7 @@ spec:
         config:
           repoURL: https://github.com/blakepettersson/kargo-helm.git
           checkout:
-          - fromFreight: true
+          - commit: ${{ commitFrom("https://github.com/blakepettersson/kargo-helm.git") }}
             path: ./src
           - branch: stage/dev
             create: true
@@ -108,7 +108,7 @@ spec:
           config:
             repoURL: https://github.com/blakepettersson/kargo-helm.git
             checkout:
-              - fromFreight: true
+              - commit: ${{ commitFrom("https://github.com/blakepettersson/kargo-helm.git") }}
                 path: ./src
               - branch: stage/staging
                 create: true
@@ -192,7 +192,7 @@ spec:
           config:
             repoURL: https://github.com/blakepettersson/kargo-helm.git
             checkout:
-              - fromFreight: true
+              - commit: ${{ commitFrom("https://github.com/blakepettersson/kargo-helm.git") }}
                 path: ./src
               - branch: stage/prod
                 create: true
